@@ -1,0 +1,41 @@
+[
+    {
+        "color": "#ff5da40c",
+        "drawFill": true,
+        "id": 3,
+        "members": [
+            {
+                "name": "ellostr",
+                "type": "string",
+                "value": "ello"
+            },
+            {
+                "name": "test",
+                "type": "bool",
+                "value": true
+            }
+        ],
+        "name": "Class0",
+        "type": "class",
+        "useAs": [
+            "property",
+            "map",
+            "layer",
+            "object",
+            "tile",
+            "tileset",
+            "wangcolor",
+            "wangset",
+            "project"
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Enum0",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+        ],
+        "valuesAsFlags": false
+    }
+]

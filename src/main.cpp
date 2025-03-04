@@ -4,6 +4,7 @@
 
 #include "config.h"
 #include "tileson.h"
+#include "ello.h"
 
 void DrawNineSlice(Texture2D texture, Rectangle totalSize, float borderSize);
 
@@ -21,23 +22,39 @@ int main() {
     // Your own initialization code here
     // ...
     // ...
-    Texture2D myTexture = LoadTexture("assets/graphics/testimage.png");
+    Texture2D myTexture = LoadTexture("assets/graphics/Grassland_Tileset.png");
     Texture2D closeButton = LoadTexture("assets/graphics/closebutton.png");
     Texture2D nineSlice = LoadTexture("assets/graphics/nineslice.png");
     tson::Tileson tileson;
-    auto MapPtr = tileson.parse("assets/data/tilemap.tmj");
-    tson::Map &Map = *MapPtr;
+
+    RenderTexture2D canvas = LoadRenderTexture(960, 540);
+    auto MapPtr = tileson.parse("assets/data/test_corrected.tmj");
+    tson::Map& Map = *MapPtr;
     Camera2D cam = {};
     cam.zoom = 1.0f;
-
+    float renderScale{};
+    Rectangle renderRec{};
+    Rectangle sourceRec{};
 
     if (Map.getStatus() != tson::ParseStatus::OK) {
         std::cout << "Failed to parse map, error: " << Map.getStatusMessage() << std::endl;
     }
-    float scale = GetScreenWidth() / 16 / Map.getTileSize().x;
+
+    std::vector<tson::Layer> layers = Map.getLayers();
+
     // Main game loop
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
+        if (IsKeyDown(KEY_LEFT_ALT) && IsKeyPressed(KEY_ENTER)) { //Fullscreen logic.
+            if (IsWindowFullscreen()) {
+                ToggleFullscreen();
+                SetWindowSize(Game::ScreenWidth,Game::ScreenHeight);
+            } else {
+                SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
+                ToggleFullscreen();
+            }
+        }
+        float scale = 1;
         // Updates that are made by frame are coded here
         // ...
         // ...
@@ -59,68 +76,188 @@ int main() {
         if (IsKeyPressed(KEY_DOWN)){
             cam.target.y += 96;
         }
+
+        if (IsKeyPressed(KEY_V))
+        {
+            SetWindowSize(960, 540);
+        }
+
+
+
         BeginDrawing();
         // You can draw on the screen between BeginDrawing() and EndDrawing()
         // ...
         // ...
-        BeginMode2D(cam);
+        BeginTextureMode(canvas);
         {
-            Color bgColor;
-            bgColor.a = 255;
-            bgColor.r = Map.getBackgroundColor().r;
-            bgColor.g = Map.getBackgroundColor().g;
-            bgColor.b = Map.getBackgroundColor().b;
-            ClearBackground(bgColor);
-            //start of map drawing
-            const int tileSize = Map.getTileSize().x;
-            const int currentFrame = int(GetTime() * 6) % 4;
-            for (const auto &layer: Map.getLayers()) {
-                if (layer.getType() == tson::LayerType::TileLayer) {
-                    for (int y = 0; y < layer.getSize().y; ++y) {
-                        for (int x = 0; x < layer.getSize().x; ++x) {
-                            int data = layer.getData()[y * layer.getSize().x + x];
-                            data--;
-                            if (data < 0) {
-                                continue;
+            BeginMode2D(cam);
+            {
+                Color bgColor;
+                bgColor.a = 255;
+                bgColor.r = Map.getBackgroundColor().r;
+                bgColor.g = Map.getBackgroundColor().g;
+                bgColor.b = Map.getBackgroundColor().b;
+                ClearBackground(bgColor);
+                //start of map drawing
+                const int tileSize = Map.getTileSize().x;
+                const int currentFrame = int(GetTime() * 30) % 4;
+                for (tson::Layer layer: Map.getLayers())
+                {
+
+                    /*
+                     * This Code does not work, bc for some reason layer groups do not work.
+                     * if (layer.getType() == tson::LayerType::Group)
+                     * {
+                     *
+                     * }
+                     **/
+
+                    if (layer.getType() == tson::LayerType::TileLayer)
+                    {
+                        if (!layer.isVisible())
+                        {
+                            continue;
+                        }
+                        for (int y = 0; y < layer.getSize().y; ++y)
+                        {
+                            for (int x = 0; x < layer.getSize().x; ++x)
+                            {
+
+                                //this is how to get the data for a tile
+                                tson::Tile* tileptr = layer.getTileData(x,y);
+                                if (tileptr == nullptr)
+                                {
+                                    continue;
+                                }
+                                tson::Tile tile = *tileptr;
+
+                                //this is an alternate and more complicated way to get layer data
+                                // (gets onty the tile coordinates in tileset, not full data)
+                                int data = layer.getData()[y * layer.getSize().x + x];
+                                data--;
+                                if (data < 0)
+                                {
+                                    continue;
+                                }
+
+                                Color color = WHITE;
+                                if (tile.getClassType() == "Wall")
+                                {
+                                    color = {230,41,55,100 };
+                                }
+
+
+                                tson::Rect tileRect = tile.getDrawingRect();
+                                Rectangle tileSetRec = {static_cast<float>(tileRect.x), static_cast<float>(tileRect.y), static_cast<float>(tileRect.width), static_cast<float>(tileRect.height)};
+
+//                               This is the approach with the data int:
+//                               Rectangle tileSetRec = {(float) (data % (myTexture.width / tileSize) * tileSize),
+//                                                        (float) (data / (myTexture.width / tileSize) * tileSize),
+//                                                        (float) tileSize, (float) tileSize};
+                                Rectangle destRec = {(float) (x * tileSize * scale), (float) (y * tileSize * scale),
+                                                     (float) tileSize * scale,
+                                                     (float) tileSize * scale};
+
+                                //this is a way to handle animation, assuming animation frames are listed after one another in the tileset:
+                                if (data >= 0xE0)
+                                {
+                                    tileSetRec.x += (float) (currentFrame * tileSize);
+                                }
+                                DrawTexturePro(myTexture, tileSetRec, destRec, {0}, 0, color);
+                                if (IsKeyDown(KEY_I))
+                                {
+                                    //print tile id
+                                    std::string text = std::to_string(tile.getId());
+                                    float width = MeasureText(text.c_str(), 5);
+                                    DrawRectangle(x * tileSize * scale - 4, y * tileSize * scale, width + 8, 30,
+                                                  IsKeyDown(KEY_LEFT_SHIFT) ? WHITE : BLACK);
+                                    DrawText(std::to_string(data).c_str(), x * tileSize * scale, y * tileSize * scale,
+                                             5,
+                                             IsKeyDown(KEY_LEFT_SHIFT) ? BLACK : WHITE);
+                                }
                             }
-                            Rectangle tileSetRec = {(float) (data % (myTexture.width / tileSize) * tileSize),
-                                                    (float) (data / (myTexture.width / tileSize) * tileSize), (float) tileSize, (float) tileSize};
-                            Rectangle destRec = {(float) (x * tileSize * scale), (float) (y * tileSize * scale), (float) tileSize * scale,
-                                                 (float) tileSize * scale};
-                            if (data >= 0xE0) {
-                                tileSetRec.x += (float) (currentFrame * tileSize);
-                            }
-                            DrawTexturePro(myTexture, tileSetRec, destRec, {0}, 0, WHITE);
-                            if (IsKeyDown(KEY_I)) {
-                                std::string text = std::to_string(data);
-                                float width = MeasureText(text.c_str(), 30);
-                                DrawRectangle(x * tileSize * scale - 4, y * tileSize * scale, width + 8, 30, IsKeyDown(KEY_LEFT_SHIFT) ? WHITE : BLACK);
-                                DrawText(std::to_string(data).c_str(), x * tileSize * scale, y * tileSize * scale, 30,
-                                         IsKeyDown(KEY_LEFT_SHIFT) ? BLACK : WHITE);
+                        }
+                    } else if (layer.getType() == tson::LayerType::ObjectGroup) {
+                        for (tson::Object object: layer.getObjects())
+                        {
+                            if (object.getObjectType() == tson::ObjectType::Polygon)
+                            {
+                                int id = object.getId();
+                                if (object.getClassType() == "Path")
+                                {
+
+                                    tson::Vector2i position = object.getPosition();
+                                    std::cout << "Polygon: " << std::endl;
+                                    std::vector<tson::Vector2i> polygon = object.getPolygons();
+                                    for (int i = 0; i < polygon.size(); ++i) {
+                                        tson::Vector2i point = polygon[i];
+                                        std::cout << point.x + position.x << "," << point.y + position.y << std::endl;
+                                    }
+                                }
+                            } else if (object.getObjectType() == tson::ObjectType::Point) {
+                                if (object.getClassType() == "Character")
+                                {
+                                    tson::PropertyCollection& properties = object.getProperties();
+                                    std::string str = properties.getProperty("ello") -> getValue<tson::TiledClass>().get<std::string>("ellostr");
+                                    tson::Vector2i position = object.getPosition();
+                                    std::string tt = static_cast<std::string>(properties.getProperty("tt") ->getValue<std::string>());
+
+//                                    bool enemy = static_cast<bool>(properties.getProperty("enemy")->getValue<bool>());
+//                                    float view = static_cast<float>( properties.getProperty("view")->getValue<float>());
+                                    tson::TiledClass cla = properties.getProperty("ello")->getValue<tson::TiledClass>();
+
+
+
+
+//                                    std::cout << "Point: " << std::endl;
+//                                    std::cout << "Position: " << position.x << "," << position.y << "; Enemy: " << enemy << "; View: " << view << std::endl;
+                                }
+
                             }
                         }
                     }
                 }
-            }
-            //draw a box around the map
-            DrawRectangleLinesEx(
-                    {-16,-16, Map.getSize().x * tileSize * scale + 32, Map.getSize().y * tileSize * scale + 32},
-                    16, IsKeyDown(KEY_LEFT_SHIFT) ? BLACK : WHITE
-                    );
-            //end of map drawing
+                //draw a box around the map
+                DrawRectangleLinesEx(
+                        {-16, -16, Map.getSize().x * tileSize * scale + 32, Map.getSize().y * tileSize * scale + 32},
+                        16, IsKeyDown(KEY_LEFT_SHIFT) ? BLACK : WHITE
+                );
+                //end of map drawing
 
-            if (IsKeyDown(KEY_G)) {
-                for (int y = 0; y < Map.getSize().y; ++y) {
-                    for (int x = 0; x < Map.getSize().x; ++x) {
-                        Color gridColor = ColorAlpha(IsKeyDown(KEY_LEFT_SHIFT) ? BLACK : WHITE, 0.5f);
-                        DrawRectangleLines(x * tileSize * scale, y * tileSize * scale, tileSize * scale, tileSize * scale, gridColor);
+                if (IsKeyDown(KEY_G))
+                {
+                    for (int y = 0; y < Map.getSize().y; ++y)
+                    {
+                        for (int x = 0; x < Map.getSize().x; ++x)
+                        {
+                            Color gridColor = ColorAlpha(IsKeyDown(KEY_LEFT_SHIFT) ? BLACK : WHITE, 0.5f);
+                            DrawRectangleLines(x * tileSize * scale, y * tileSize * scale, tileSize * scale,
+                                               tileSize * scale, gridColor);
 
+                        }
                     }
                 }
             }
+            EndMode2D();
         }
-        EndMode2D();
+        EndTextureMode();
 
+        // Draw a rectangle
+        renderScale = std::min(GetScreenHeight() / (float) canvas.texture.height, // Calculates how big or small the canvas has to be rendered.
+                               GetScreenWidth()  / (float) canvas.texture.width); // Priority is given to the smaller side.
+        renderScale = floorf(renderScale);
+        if (renderScale < 1) renderScale = 1; // Ensure that scale is at least 1.
+        renderRec.width = canvas.texture.width * renderScale;
+        renderRec.height = canvas.texture.height * renderScale;
+        renderRec.x = (GetScreenWidth() - renderRec.width) / 2.0f;
+        renderRec.y = (GetScreenHeight() - renderRec.height) / 2.0f;
+        DrawTexturePro(canvas.texture,
+                       Rectangle{0, 0, (float) canvas.texture.width, (float) -canvas.texture.height},
+                       renderRec,
+                       {}, 0, WHITE);
+        if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_S)) {
+            DrawText(TextFormat("Render scale: %.0f", renderScale), 10, 10, 20, LIGHTGRAY);
+        }
         //9-Slice segment
         if (IsKeyDown(KEY_NINE)){
             DrawRectangle(0,0,GetScreenWidth(), GetScreenHeight(), ColorAlpha(BLACK, 0.8f));
