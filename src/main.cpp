@@ -211,13 +211,32 @@ int main() {
                                 {
                                     tson::PropertyCollection& properties = object.getProperties();
                                     Rectangle hitbox = {
-                                            properties.getProperty("x")->getValue<float>(),
-                                            properties.getProperty("y")->getValue<float>(),
-                                            properties.getProperty("width")->getValue<float>(),
-                                            properties.getProperty("height")->getValue<float>()
+                                            (float)object.getPosition().x,
+                                            (float)object.getPosition().y,
+                                            (float)object.getSize().x,
+                                            (float)object.getSize().y
                                     };
 
-                                    DrawRectangleRec(hitbox, RED);
+                                    tson::Property* path = properties.getProperty("tilesheet");
+                                    tson::Property sheet = *path;
+                                    fs::path val = sheet.getValue<fs::path>();
+                                    std::string str = val.string();
+                                    std::string delimiter = "../";
+
+                                    // Find position of the delimiter
+                                    size_t pos = str.find(delimiter);
+
+                                    if (pos != std::string::npos) {
+                                        // Erase from the beginning to the end of the delimiter
+                                        str.erase(0, pos + delimiter.length());
+                                    }
+                                    str = "assets/" + str;
+
+                                    Texture2D sprite = LoadTexture(str.c_str());
+
+                                    DrawTexture(sprite, hitbox.x, hitbox.y, WHITE);
+
+                                    //DrawRectangleRec(hitbox, RED);
                                     tson::Vector2i position = object.getPosition();
                                     /*std::string tt = static_cast<std::string>(properties.getProperty("tt") ->getValue<std::string>());
 

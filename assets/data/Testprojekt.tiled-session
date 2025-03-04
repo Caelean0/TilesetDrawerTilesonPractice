@@ -2,6 +2,7 @@
     "activeFile": "test_corrected.tmj",
     "automapping.whileDrawing": false,
     "expandedProjectPaths": [
+        "TiledTemplates",
         "."
     ],
     "fileStates": {
@@ -21,11 +22,11 @@
             }
         },
         "test_corrected.tmj": {
-            "scale": 0.5,
-            "selectedLayer": 4,
+            "scale": 1,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 845,
-                "y": 515
+                "x": 790.5,
+                "y": 322.5
             }
         },
         "test_corrected.tmj#Workshopset": {
@@ -44,12 +45,12 @@
             "scaleInEditor": 1
         }
     },
-    "last.objectTemplatePath": "C:/CLionRepos/Tilesetdrawer/assets/data",
+    "last.objectTemplatePath": "C:/CLionRepos/Tilesetdrawer/assets/data/TiledTemplates",
     "openFiles": [
         "test_corrected.tmj"
     ],
     "project": "Testprojekt.tiled-project",
-    "property.type": "float",
+    "property.type": "string",
     "recentFiles": [
         "test_corrected.tmj",
         "Workshopset_copy.tsj",

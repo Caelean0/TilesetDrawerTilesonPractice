@@ -194,82 +194,67 @@
          "name":"Object Layer 1",
          "objects":[
                 {
-                 "id":9,
+                 "id":14,
+                 "name":"Marion",
                  "properties":[
                         {
-                         "name":"height",
-                         "type":"float",
-                         "value":5
-                        }, 
-                        {
-                         "name":"x",
-                         "type":"float",
-                         "value":4
-                        }, 
-                        {
-                         "name":"y",
-                         "type":"float",
-                         "value":4
+                         "name":"tilesheet",
+                         "type":"file",
+                         "value":"..\/graphics\/closebutton.png"
                         }],
-                 "template":"Enemy.tj",
+                 "template":"TiledTemplates\/Enemy.tj",
                  "type":"Enemy",
-                 "x":833,
-                 "y":145
+                 "x":719,
+                 "y":216
                 }, 
                 {
-                 "id":11,
+                 "id":16,
+                 "name":"Sheila",
                  "properties":[
                         {
-                         "name":"height",
-                         "type":"float",
-                         "value":24
+                         "name":"isAggressive",
+                         "type":"bool",
+                         "value":false
                         }, 
                         {
-                         "name":"width",
+                         "name":"sightRange",
                          "type":"float",
-                         "value":24
+                         "value":10
                         }, 
                         {
-                         "name":"x",
-                         "type":"float",
-                         "value":24
-                        }, 
-                        {
-                         "name":"y",
-                         "type":"float",
-                         "value":24
+                         "name":"tilesheet",
+                         "type":"file",
+                         "value":"..\/graphics\/closebutton.png"
                         }],
-                 "template":"Enemy.tj",
-                 "x":992,
-                 "y":67
+                 "template":"TiledTemplates\/Enemy.tj",
+                 "x":964,
+                 "y":448
                 }, 
                 {
-                 "id":12,
+                 "id":17,
+                 "name":"Tom",
                  "properties":[
                         {
-                         "name":"height",
-                         "type":"float",
-                         "value":7
-                        }, 
-                        {
-                         "name":"width",
-                         "type":"float",
-                         "value":4
-                        }, 
-                        {
-                         "name":"y",
-                         "type":"float",
-                         "value":2
+                         "name":"tilesheet",
+                         "type":"file",
+                         "value":"..\/graphics\/closebutton.png"
                         }],
-                 "template":"Enemy.tj",
+                 "template":"TiledTemplates\/Enemy.tj",
+                 "x":728,
+                 "y":570
+                }, 
+                {
+                 "id":18,
+                 "name":"Peter",
+                 "properties":[
+                        {
+                         "name":"tilesheet",
+                         "type":"file",
+                         "value":"..\/graphics\/closebutton.png"
+                        }],
+                 "template":"TiledTemplates\/Enemy.tj",
                  "x":1006,
-                 "y":268
-                }, 
-                {
-                 "id":13,
-                 "template":"Enemy.tj",
-                 "x":868,
-                 "y":353
+                 "y":207
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -278,7 +263,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":14,
+ "nextobjectid":19,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
