@@ -10,8 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(${PROJECT_NAME} main.cpp
         tileson.h
-        ello.cpp
-        ello.h)
+)
 
 # Add config.h.in file
 configure_file(config.h.in config.h)

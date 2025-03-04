@@ -4,7 +4,6 @@
 
 #include "config.h"
 #include "tileson.h"
-#include "ello.h"
 
 void DrawNineSlice(Texture2D texture, Rectangle totalSize, float borderSize);
 
@@ -22,7 +21,7 @@ int main() {
     // Your own initialization code here
     // ...
     // ...
-    Texture2D myTexture = LoadTexture("assets/graphics/Grassland_Tileset.png");
+    Texture2D tilesetGraphic = LoadTexture("assets/graphics/Grassland_Tileset.png");
     Texture2D closeButton = LoadTexture("assets/graphics/closebutton.png");
     Texture2D nineSlice = LoadTexture("assets/graphics/nineslice.png");
     tson::Tileson tileson;
@@ -104,13 +103,22 @@ int main() {
                 for (tson::Layer layer: Map.getLayers())
                 {
 
-                    /*
-                     * This Code does not work, bc for some reason layer groups do not work.
-                     * if (layer.getType() == tson::LayerType::Group)
-                     * {
-                     *
-                     * }
-                     **/
+                    /**
+                     * @attention: this code does nothing, just to show how to use group layers
+                     */
+                    if (layer.getType() == tson::LayerType::Group)
+                    {
+                        std::vector<tson::Layer> groupLayers = layer.getLayers();
+                        for (tson::Layer groupLayer : groupLayers)
+                        {
+                            if (groupLayer.getType() == tson::LayerType::TileLayer)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+
+
 
                     if (layer.getType() == tson::LayerType::TileLayer)
                     {
@@ -151,19 +159,23 @@ int main() {
                                 Rectangle tileSetRec = {static_cast<float>(tileRect.x), static_cast<float>(tileRect.y), static_cast<float>(tileRect.width), static_cast<float>(tileRect.height)};
 
 //                               This is the approach with the data int:
-//                               Rectangle tileSetRec = {(float) (data % (myTexture.width / tileSize) * tileSize),
-//                                                        (float) (data / (myTexture.width / tileSize) * tileSize),
+//                               Rectangle tileSetRec = {(float) (data % (tilesetGraphic.width / tileSize) * tileSize),
+//                                                        (float) (data / (tilesetGraphic.width / tileSize) * tileSize),
 //                                                        (float) tileSize, (float) tileSize};
                                 Rectangle destRec = {(float) (x * tileSize * scale), (float) (y * tileSize * scale),
                                                      (float) tileSize * scale,
                                                      (float) tileSize * scale};
 
-                                //this is a way to handle animation, assuming animation frames are listed after one another in the tileset:
-                                if (data >= 0xE0)
+                                /**
+                                 * @info: this is a way to handle animation, assuming animation frames are listed after
+                                 * one another in the tileset:
+                                 */
+
+                                /*if (data >= 0xE0)
                                 {
                                     tileSetRec.x += (float) (currentFrame * tileSize);
-                                }
-                                DrawTexturePro(myTexture, tileSetRec, destRec, {0}, 0, color);
+                                }*/
+                                DrawTexturePro(tilesetGraphic, tileSetRec, destRec, {0}, 0, color);
                                 if (IsKeyDown(KEY_I))
                                 {
                                     //print tile id
@@ -194,17 +206,24 @@ int main() {
                                         std::cout << point.x + position.x << "," << point.y + position.y << std::endl;
                                     }
                                 }
-                            } else if (object.getObjectType() == tson::ObjectType::Point) {
-                                if (object.getClassType() == "Character")
+                            } else if (object.getObjectType() == tson::ObjectType::Template) {
+                                if (object.getClassType() == "Enemy")
                                 {
                                     tson::PropertyCollection& properties = object.getProperties();
-                                    std::string str = properties.getProperty("ello") -> getValue<tson::TiledClass>().get<std::string>("ellostr");
+                                    Rectangle hitbox = {
+                                            properties.getProperty("x")->getValue<float>(),
+                                            properties.getProperty("y")->getValue<float>(),
+                                            properties.getProperty("width")->getValue<float>(),
+                                            properties.getProperty("height")->getValue<float>()
+                                    };
+
+                                    DrawRectangleRec(hitbox, RED);
                                     tson::Vector2i position = object.getPosition();
-                                    std::string tt = static_cast<std::string>(properties.getProperty("tt") ->getValue<std::string>());
+                                    /*std::string tt = static_cast<std::string>(properties.getProperty("tt") ->getValue<std::string>());
 
 //                                    bool enemy = static_cast<bool>(properties.getProperty("enemy")->getValue<bool>());
 //                                    float view = static_cast<float>( properties.getProperty("view")->getValue<float>());
-                                    tson::TiledClass cla = properties.getProperty("ello")->getValue<tson::TiledClass>();
+                                    tson::TiledClass cla = properties.getProperty("ello")->getValue<tson::TiledClass>();*/
 
 
 
@@ -278,7 +297,7 @@ int main() {
     // De-initialization here
     // ...
     // ...
-    UnloadTexture(myTexture);
+    UnloadTexture(tilesetGraphic);
 
     // Close window and OpenGL context
     CloseWindow();

@@ -1,0 +1,60 @@
+{
+    "activeFile": "test_corrected.tmj",
+    "automapping.whileDrawing": false,
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "": {
+            "scaleInEditor": 1
+        },
+        "Workshopset_copy.tsj": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "test.tmj": {
+            "scale": 0.4354166666666666,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 651.1004784688996,
+                "y": 430.62200956937806
+            }
+        },
+        "test_corrected.tmj": {
+            "scale": 0.5,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 845,
+                "y": 515
+            }
+        },
+        "test_corrected.tmj#Workshopset": {
+            "scaleInDock": 1
+        },
+        "tilemap.tmj": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 650.5,
+                "y": 185
+            }
+        },
+        "tileset.tsj": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.objectTemplatePath": "C:/CLionRepos/Tilesetdrawer/assets/data",
+    "openFiles": [
+        "test_corrected.tmj"
+    ],
+    "project": "Testprojekt.tiled-project",
+    "property.type": "float",
+    "recentFiles": [
+        "test_corrected.tmj",
+        "Workshopset_copy.tsj",
+        "test.tmj",
+        "tilemap.tmj",
+        "tileset.tsj"
+    ]
+}
