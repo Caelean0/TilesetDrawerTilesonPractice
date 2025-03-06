@@ -1,0 +1,23 @@
+{ "object":
+    {
+     "height":144,
+     "id":19,
+     "name":"EnemyName",
+     "properties":[
+            {
+             "name":"Banknummer",
+             "type":"string",
+             "value":"adfassdfasdf"
+            }, 
+            {
+             "name":"isenemy",
+             "type":"bool",
+             "value":true
+            }],
+     "rotation":0,
+     "type":"Enemy",
+     "visible":true,
+     "width":119
+    },
+ "type":"template"
+}

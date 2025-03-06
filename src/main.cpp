@@ -29,6 +29,7 @@ int main() {
     RenderTexture2D canvas = LoadRenderTexture(960, 540);
     auto MapPtr = tileson.parse("assets/data/test_corrected.tmj");
     tson::Map& Map = *MapPtr;
+    tson::Tileset tileset = Map.getTilesets().at(0);
     Camera2D cam = {};
     cam.zoom = 1.0f;
     float renderScale{};
@@ -120,6 +121,7 @@ int main() {
 
 
 
+
                     if (layer.getType() == tson::LayerType::TileLayer)
                     {
                         if (!layer.isVisible())
@@ -138,6 +140,31 @@ int main() {
                                     continue;
                                 }
                                 tson::Tile tile = *tileptr;
+
+                                /**
+                                 * @info: If Tile has animation, save Frames as Tuple of the Frame Tile and the Frame duration
+                                 * @attention: Animations should probably be saved at the first parse of the Tiled file, not
+                                 * during each update frame
+                                 */
+                                tson::Animation animation = tile.getAnimation();
+                                if (animation.any())
+                                {
+                                    std::vector<tson::Frame> frames = animation.getFrames();
+                                    std::vector<std::tuple<tson::Tile, int>> animationTiles;
+                                    for (auto frame: frames)
+                                    {
+                                        tson::Tile *tile = tileset.getTile(frame.getTileId());
+                                        if (tile == nullptr)
+                                        {
+                                            continue;
+                                        }
+                                        std::tuple<tson::Tile, int> tileTuple = std::make_tuple(*tile,
+                                                                                                frame.getDuration());
+                                        animationTiles.push_back(tileTuple);
+                                    }
+                                    int length = animationTiles.size();
+                                }
+
 
                                 //this is an alternate and more complicated way to get layer data
                                 // (gets onty the tile coordinates in tileset, not full data)
