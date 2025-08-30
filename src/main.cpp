@@ -194,7 +194,7 @@ int main() {
                                                      (float) tileSize * scale};
 
                                 /**
-                                 * @info: this is a way to handle animation, assuming animation frames are listed after
+                                 * @info: this is another, more simplistic way to handle animation, assuming animation frames are listed after
                                  * one another in the tileset:
                                  */
 
