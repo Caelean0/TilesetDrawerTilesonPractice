@@ -1,13 +1,31 @@
 {
-    "activeFile": "test_corrected.tmj",
+    "activeFile": "Workshopset.tsj",
     "automapping.whileDrawing": false,
     "expandedProjectPaths": [
-        "TiledTemplates",
-        "."
+        ".",
+        "TiledTemplates"
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "": {
+            "scaleInDock": 1,
             "scaleInEditor": 1
+        },
+        "C:/PA2-Repo/projektarbeit-ii-pixelgame-team03/assets/data/Tile_Atlas_.tsj": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/PA2-Repo/projektarbeit-ii-pixelgame-team03/assets/data/level1.tmj": {
+            "scale": 0.3797526041666666,
+            "selectedLayer": 52,
+            "viewCenter": {
+                "x": 767.605006000343,
+                "y": 433.1767529573119
+            }
+        },
+        "Workshopset.tsj": {
+            "scaleInDock": 1,
+            "scaleInEditor": 0.33
         },
         "Workshopset_copy.tsj": {
             "scaleInDock": 1,
@@ -22,11 +40,17 @@
             }
         },
         "test_corrected.tmj": {
+            "expandedGroupLayers": [
+                11
+            ],
+            "expandedObjectLayers": [
+                7
+            ],
             "scale": 1,
-            "selectedLayer": 5,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 790.5,
-                "y": 322.5
+                "x": 361.5,
+                "y": 412.5
             }
         },
         "test_corrected.tmj#Workshopset": {
@@ -45,14 +69,21 @@
             "scaleInEditor": 1
         }
     },
+    "frame.defaultDuration": 500,
+    "last.externalTilesetPath": "C:/CLionRepos/Tilesetdrawer/assets/data",
     "last.objectTemplatePath": "C:/CLionRepos/Tilesetdrawer/assets/data/TiledTemplates",
     "openFiles": [
-        "test_corrected.tmj"
+        "C:/PA2-Repo/projektarbeit-ii-pixelgame-team03/assets/data/Tile_Atlas_.tsj",
+        "test_corrected.tmj",
+        "Workshopset.tsj"
     ],
     "project": "Testprojekt.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "C:/PA2-Repo/projektarbeit-ii-pixelgame-team03/assets/data/Tile_Atlas_.tsj",
         "test_corrected.tmj",
+        "Workshopset.tsj",
+        "C:/PA2-Repo/projektarbeit-ii-pixelgame-team03/assets/data/level1.tmj",
         "Workshopset_copy.tsj",
         "test.tmj",
         "tilemap.tmj",
